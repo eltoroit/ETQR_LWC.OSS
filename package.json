@@ -1,0 +1,52 @@
+{
+	"name": "LWC.OSS",
+	"description": "Sample code for LWC OSS",
+	"version": "0.0.0",
+	"author": "Andres Perez",
+	"bugs": "https://github.com/eltoroit/LWC.OSS/issues",
+	"dependencies": {
+		"lwc-services": "^1.3.12"
+	},
+	"devDependencies": {
+		"husky": "^3.1.0",
+		"lint-staged": "^9.5.0"
+	},
+	"engines": {
+		"node": ">=10.0.0"
+	},
+	"homepage": "https://github.com/eltoroit/LWC.OSS",
+	"husky": {
+		"hooks": {
+			"pre-commit": "lint-staged"
+		}
+	},
+	"keywords": [
+		"lwc"
+	],
+	"license": "MIT",
+	"lint-staged": {
+		"**/*.{css,html,js,json,md,ts,yaml,yml}": [
+			"prettier --write"
+		],
+		"./src/**/*.js": [
+			"eslint"
+		],
+		"*": [
+			"git add"
+		]
+	},
+	"repository": "eltoroit/LWC.OSS",
+	"scripts": {
+		"build": "lwc-services build -m production",
+		"build:development": "lwc-services build",
+		"lint": "eslint ./src/**/*.js",
+		"prettier": "prettier --write '**/*.{css,html,js,json,md,ts,yaml,yml}'",
+		"prettier:verify": "prettier --list-different '**/*.{css,html,js,json,md,ts,yaml,yml}'",
+		"serve": "lwc-services serve",
+		"test:unit": "lwc-services test:unit",
+		"test:unit:coverage": "lwc-services test:unit --coverage",
+		"test:unit:debug": "lwc-services test:unit --debug",
+		"test:unit:watch": "lwc-services test:unit --watch",
+		"watch": "lwc-services watch"
+	}
+}
