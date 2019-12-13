@@ -5,6 +5,7 @@
 	"author": "Andres Perez",
 	"bugs": "https://github.com/eltoroit/LWC.OSS/issues",
 	"dependencies": {
+		"jsqr": "^1.2.0",
 		"lwc-services": "^1.3.12"
 	},
 	"devDependencies": {

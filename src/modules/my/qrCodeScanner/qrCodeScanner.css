@@ -1,0 +1,33 @@
+:host {
+	font-family: 'Ropa Sans', sans-serif;
+	color: #333;
+	max-width: 640px;
+	margin: 0 auto;
+	position: relative;
+}
+
+.loadingMessage {
+	text-align: center;
+	padding: 40px;
+	background-color: #eee;
+}
+
+.canvas {
+	width: 100%;
+}
+
+.output {
+	margin-top: 20px;
+	background: #eee;
+	padding: 10px;
+	padding-bottom: 0;
+}
+
+.outputDiv {
+	padding-bottom: 10px;
+	word-wrap: break-word;
+}
+
+.noQRFound {
+	text-align: center;
+}

@@ -1,22 +1,19 @@
 <template>
-	<!-- LWC sample component <my-greeting> -->
-	<div class="center greeting">
-		<!-- <my-greeting speed="slow"></my-greeting> -->
-		<my-greeting speed="medium"></my-greeting>
-		<!-- <my-greeting speed="fast"></my-greeting> -->
-	</div>
-
-	<div class="center">
-		<img src="./resources/lwc.png" />
-	</div>
-
-	<!-- Page code -->
-	<div class="center">
-		<div class="container">
-			<p class="info">Edit <strong class="code">src/modules/my/app/app.html</strong> <br />and save for live reload.</p>
+	<div class="slds-tabs_default slds-tabs_large">
+		<ul class="slds-tabs_default__nav" role="tablist">
+			<li class="slds-tabs_default__item slds-is-active" data-id="tabScan" onclick={showScan}>
+				Scan
+			</li>
+			<li class="slds-tabs_default__item" data-id="tabGenerate" onclick={showGenerate}>
+				Generate
+			</li>
+		</ul>
+		<div id="tab-default-1" class="slds-tabs_default__content slds-show" data-id="pageScan">
+			<my-qr-code-scanner></my-qr-code-scanner>
 		</div>
-		<div>
-			<a href="https://lwc.dev" class="link" target="_blank">Learn LWC</a>
+		<div id="tab-default-2" class="slds-tabs_default__content slds-hide" data-id="pageGenerate">
+			<my-button></my-button>
 		</div>
 	</div>
+	v5.0
 </template>
