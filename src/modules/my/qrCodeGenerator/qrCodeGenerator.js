@@ -1,17 +1,26 @@
-import { LightningElement } from 'lwc';
+import { LightningElement, api } from 'lwc';
 import QRCode from 'qrcode'; // https://github.com/soldair/node-qrcode
 
 export default class QrCodeGenerator extends LightningElement {
-	clickMe() {
+	@api isVisible = false;
+
+	constructor() {
+		super();
+		// eslint-disable-next-line @lwc/lwc/no-async-operation
+		setInterval(() => {
+			if (this.isVisible) {
+				this.generateQR();
+			}
+		}, 1000);
+	}
+
+	generateQR() {
+		const canvas = this.template.querySelector('[data-id="QRCode"]');
 		const sData = JSON.stringify(new Date().toJSON());
-		QRCode.toCanvas(sData, { width: Math.min(window.innerWidth, window.innerHeight) })
-			.then(newCanvas => {
-				const canvasDiv = this.template.querySelector('[data-id="QRCode"]');
-				while (canvasDiv.firstChild) {
-					canvasDiv.removeChild(canvasDiv.firstChild);
-				}
-				canvasDiv.appendChild(newCanvas);
-				console.log('success!');
+
+		QRCode.toCanvas(canvas, sData, { width: Math.min(window.innerWidth, window.innerHeight) })
+			.then(() => {
+				console.log('Generated QR!');
 			})
 			.catch(err => {
 				throw Error(err);

@@ -1,11 +1,26 @@
 /* eslint-disable no-debugger */
 /* eslint-disable @lwc/lwc/no-async-operation */
 
-import { LightningElement } from 'lwc';
+import { LightningElement, api } from 'lwc';
 import jsQR from 'jsqr'; // npm install jsqr --save
 
 export default class QrCodeScanner extends LightningElement {
 	vars = null;
+	_isVisible = false;
+
+	@api
+	get isVisible() {
+		return this._isVisible;
+	}
+
+	set isVisible(value) {
+		this._isVisible = value;
+		if (this._isVisible) {
+			window.requestAnimationFrame(() => {
+				this._tick();
+			});
+		}
+	}
 
 	renderedCallback() {
 		if (!this.vars) {
@@ -31,35 +46,38 @@ export default class QrCodeScanner extends LightningElement {
 	}
 
 	_tick() {
-		this.vars.loadingMessage.innerText = '⌛ Loading video...';
-		if (this.vars.video.readyState === this.vars.video.HAVE_ENOUGH_DATA) {
-			this.vars.loadingMessage.hidden = true;
-			this.vars.canvasElement.hidden = false;
-			this.vars.outputContainer.hidden = false;
+		if (this.isVisible) {
+			this.vars.loadingMessage.innerText = '⌛ Loading video...';
+			if (this.vars.video.readyState === this.vars.video.HAVE_ENOUGH_DATA) {
+				console.log('Scanning');
+				this.vars.loadingMessage.hidden = true;
+				this.vars.canvasElement.hidden = false;
+				this.vars.outputContainer.hidden = false;
 
-			this.vars.canvasElement.height = this.vars.video.videoHeight;
-			this.vars.canvasElement.width = this.vars.video.videoWidth;
-			this.vars.canvas.drawImage(this.vars.video, 0, 0, this.vars.canvasElement.width, this.vars.canvasElement.height);
-			let imageData = this.vars.canvas.getImageData(0, 0, this.vars.canvasElement.width, this.vars.canvasElement.height);
-			let code = jsQR(imageData.data, imageData.width, imageData.height, {
-				inversionAttempts: 'dontInvert'
-			});
-			if (code) {
-				this._drawLine(code.location.topLeftCorner, code.location.topRightCorner, '#FF3B58');
-				this._drawLine(code.location.topRightCorner, code.location.bottomRightCorner, '#FF3B58');
-				this._drawLine(code.location.bottomRightCorner, code.location.bottomLeftCorner, '#FF3B58');
-				this._drawLine(code.location.bottomLeftCorner, code.location.topLeftCorner, '#FF3B58');
-				this.vars.outputMessage.hidden = true;
-				this.vars.outputData.parentElement.hidden = false;
-				this.vars.outputData.innerText = code.data;
-				// } else {
-				// 	this.vars.outputMessage.hidden = false;
-				// 	this.vars.outputData.parentElement.hidden = true;
+				this.vars.canvasElement.height = this.vars.video.videoHeight;
+				this.vars.canvasElement.width = this.vars.video.videoWidth;
+				this.vars.canvas.drawImage(this.vars.video, 0, 0, this.vars.canvasElement.width, this.vars.canvasElement.height);
+				let imageData = this.vars.canvas.getImageData(0, 0, this.vars.canvasElement.width, this.vars.canvasElement.height);
+				let code = jsQR(imageData.data, imageData.width, imageData.height, {
+					inversionAttempts: 'dontInvert'
+				});
+				if (code) {
+					this._drawLine(code.location.topLeftCorner, code.location.topRightCorner, '#FF3B58');
+					this._drawLine(code.location.topRightCorner, code.location.bottomRightCorner, '#FF3B58');
+					this._drawLine(code.location.bottomRightCorner, code.location.bottomLeftCorner, '#FF3B58');
+					this._drawLine(code.location.bottomLeftCorner, code.location.topLeftCorner, '#FF3B58');
+					this.vars.outputMessage.hidden = true;
+					this.vars.outputData.parentElement.hidden = false;
+					this.vars.outputData.innerText = code.data;
+					// } else {
+					// 	this.vars.outputMessage.hidden = false;
+					// 	this.vars.outputData.parentElement.hidden = true;
+				}
 			}
+			window.requestAnimationFrame(() => {
+				this._tick();
+			});
 		}
-		window.requestAnimationFrame(() => {
-			this._tick();
-		});
 	}
 
 	_drawLine(begin, end, color) {

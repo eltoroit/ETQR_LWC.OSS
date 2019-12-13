@@ -1,19 +1,19 @@
 <template>
 	<div class="slds-tabs_default slds-tabs_large">
 		<ul class="slds-tabs_default__nav" role="tablist">
-			<li class="slds-tabs_default__item slds-is-active" data-id="tabScan" onclick={showScan}>
-				Scan
+			<li class="slds-tabs_default__item" data-id="tabScanner" onclick={showScanner}>
+				Scanner
 			</li>
-			<li class="slds-tabs_default__item" data-id="tabGenerate" onclick={showGenerate}>
-				Generate
+			<li class="slds-tabs_default__item" data-id="tabGenerator" onclick={showGenerator}>
+				Generator
 			</li>
 		</ul>
-		<div id="tab-default-1" class="slds-tabs_default__content slds-show" data-id="pageScan">
-			<my-qr-code-scanner></my-qr-code-scanner>
+		<div id="tab-default-1" class="slds-tabs_default__content slds-hide" data-id="pageScanner">
+			<my-qr-code-scanner is-visible={isScannerVisible}></my-qr-code-scanner>
 		</div>
-		<div id="tab-default-2" class="slds-tabs_default__content slds-hide" data-id="pageGenerate">
-			<my-qr-code-generator></my-qr-code-generator>
+		<div id="tab-default-2" class="slds-tabs_default__content slds-hide" data-id="pageGenerator">
+			<my-qr-code-generator is-visible={isGeneratorVisible}></my-qr-code-generator>
 		</div>
 	</div>
-	v1.8
+	v2.0
 </template>

@@ -1,23 +1,48 @@
-import { LightningElement } from 'lwc';
+import { LightningElement, track } from 'lwc';
 
 export default class App extends LightningElement {
-	showScan() {
-		this._switchPage('scan');
+	_initialized = false;
+	@track pageVisibility = {};
+
+	constructor() {
+		super();
+		this.pageVisibility = {
+			scanner: false,
+			generator: false
+		};
 	}
 
-	showGenerate() {
-		this._switchPage('generate');
+	renderedCallback() {
+		if (!this._initialized) {
+			this._initialized = true;
+			this._switchPage('scanner');
+		}
+	}
+
+	get isScannerVisible() {
+		return this.pageVisibility.scanner;
+	}
+	get isGeneratorVisible() {
+		return this.pageVisibility.generator;
+	}
+
+	showScanner() {
+		this._switchPage('scanner');
+	}
+
+	showGenerator() {
+		this._switchPage('generator');
 	}
 
 	_getDOM() {
 		return {
 			tabs: {
-				scan: this.template.querySelector('[data-id="tabScan"]'),
-				generate: this.template.querySelector('[data-id="tabGenerate"]')
+				scanner: this.template.querySelector('[data-id="tabScanner"]'),
+				generator: this.template.querySelector('[data-id="tabGenerator"]')
 			},
 			pages: {
-				scan: this.template.querySelector('[data-id="pageScan"]'),
-				generate: this.template.querySelector('[data-id="pageGenerate"]')
+				scanner: this.template.querySelector('[data-id="pageScanner"]'),
+				generator: this.template.querySelector('[data-id="pageGenerator"]')
 			}
 		};
 	}
@@ -26,6 +51,10 @@ export default class App extends LightningElement {
 		let dom = this._getDOM();
 
 		// Object.keys(dom.tabs).forEach((key, value) => { ... });
+		Object.keys(this.pageVisibility).forEach(key => {
+			this.pageVisibility[key] = key === newTab;
+		});
+
 		Object.keys(dom.tabs).forEach(key => {
 			if (key === newTab) {
 				dom.tabs[key].classList.add('slds-is-active');
@@ -33,6 +62,7 @@ export default class App extends LightningElement {
 				dom.tabs[key].classList.remove('slds-is-active');
 			}
 		});
+
 		Object.keys(dom.pages).forEach(key => {
 			if (key === newTab) {
 				dom.pages[key].classList.add('slds-show');
