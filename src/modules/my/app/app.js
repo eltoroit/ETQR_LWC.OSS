@@ -15,7 +15,18 @@ export default class App extends LightningElement {
 	renderedCallback() {
 		if (!this._initialized) {
 			this._initialized = true;
-			this._switchPage('scanner');
+
+			// http://localhost:3001/?tab=generator
+			let urlParams = new URLSearchParams(window.location.search);
+			switch (urlParams.get('tab')) {
+				case 'scanner':
+				case 'generator':
+					this._switchPage(urlParams.get('tab'));
+					break;
+				default:
+					this._switchPage('scanner');
+					break;
+			}
 		}
 	}
 

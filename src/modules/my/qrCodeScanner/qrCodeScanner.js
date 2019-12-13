@@ -32,7 +32,6 @@ export default class QrCodeScanner extends LightningElement {
 			this.vars.outputContainer = this.template.querySelector('[data-id=output]');
 			this.vars.outputMessage = this.template.querySelector('[data-id=outputMessage]');
 			this.vars.outputData = this.template.querySelector('[data-id=outputData]');
-			this._startVideo();
 		}
 	}
 
