@@ -4,7 +4,7 @@
 import { LightningElement } from 'lwc';
 import jsQR from 'jsqr'; // npm install jsqr --save
 
-export default class App extends LightningElement {
+export default class QrCodeScanner extends LightningElement {
 	vars = null;
 
 	renderedCallback() {
