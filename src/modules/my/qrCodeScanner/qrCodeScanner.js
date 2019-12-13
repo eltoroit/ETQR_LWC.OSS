@@ -16,9 +16,9 @@ export default class QrCodeScanner extends LightningElement {
 	set isVisible(value) {
 		this._isVisible = value;
 		if (this._isVisible) {
-			window.requestAnimationFrame(() => {
-				this._tick();
-			});
+			this._startVideo();
+		} else {
+			this._stopVideo();
 		}
 	}
 
@@ -32,16 +32,7 @@ export default class QrCodeScanner extends LightningElement {
 			this.vars.outputContainer = this.template.querySelector('[data-id=output]');
 			this.vars.outputMessage = this.template.querySelector('[data-id=outputMessage]');
 			this.vars.outputData = this.template.querySelector('[data-id=outputData]');
-
-			// Use facingMode: environment to attemt to get the front camera on phones
-			navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } }).then(stream => {
-				this.vars.video.srcObject = stream;
-				this.vars.video.setAttribute('playsinline', true); // required to tell iOS safari we don't want fullscreen
-				this.vars.video.play();
-				window.requestAnimationFrame(() => {
-					this._tick();
-				});
-			});
+			this._startVideo();
 		}
 	}
 
@@ -87,5 +78,24 @@ export default class QrCodeScanner extends LightningElement {
 		this.vars.canvas.lineWidth = 4;
 		this.vars.canvas.strokeStyle = color;
 		this.vars.canvas.stroke();
+	}
+
+	_stopVideo() {
+		// Stop all video streams.
+		if (this.vars && this.vars.video) {
+			this.vars.video.srcObject.getVideoTracks().forEach(track => track.stop());
+		}
+	}
+
+	_startVideo() {
+		// Use facingMode: environment to attemt to get the front camera on phones
+		navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } }).then(stream => {
+			this.vars.video.srcObject = stream;
+			this.vars.video.setAttribute('playsinline', true); // required to tell iOS safari we don't want fullscreen
+			this.vars.video.play();
+			window.requestAnimationFrame(() => {
+				this._tick();
+			});
+		});
 	}
 }
