@@ -1,3 +1,4 @@
+/* eslint-disable no-alert */
 /* eslint-disable no-debugger */
 /* eslint-disable @lwc/lwc/no-async-operation */
 
@@ -87,14 +88,24 @@ export default class QrCodeScanner extends LightningElement {
 	}
 
 	_startVideo() {
-		// Use facingMode: environment to attemt to get the front camera on phones
-		navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } }).then(stream => {
-			this.vars.video.srcObject = stream;
-			this.vars.video.setAttribute('playsinline', true); // required to tell iOS safari we don't want fullscreen
-			this.vars.video.play();
-			window.requestAnimationFrame(() => {
-				this._tick();
-			});
-		});
+		// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Optional_chaining
+		if (navigator?.mediaDevices?.getUserMedia) {
+			// Use facingMode: environment to attemt to get the front camera on phones
+			navigator.mediaDevices
+				.getUserMedia({ video: { facingMode: 'environment' } })
+				.then(stream => {
+					this.vars.video.srcObject = stream;
+					this.vars.video.setAttribute('playsinline', true); // required to tell iOS safari we don't want fullscreen
+					this.vars.video.play();
+					window.requestAnimationFrame(() => {
+						this._tick();
+					});
+				})
+				.catch(() => {
+					alert('Your browser does not support camera, sorry. (1)');
+				});
+		} else {
+			alert('Your browser does not support camera, sorry. (2)');
+		}
 	}
 }
