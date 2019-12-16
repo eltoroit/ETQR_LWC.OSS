@@ -1,3 +1,4 @@
 #!/bin/bash
 
-npm run build:development
+npm run build
+# npm run build:development

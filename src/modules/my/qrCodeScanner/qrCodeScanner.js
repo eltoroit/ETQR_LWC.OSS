@@ -16,6 +16,7 @@ export default class QrCodeScanner extends LightningElement {
 	}
 
 	set isVisible(value) {
+		this._data = null;
 		this._isVisible = value;
 
 		if (this._isVisible) {
@@ -103,35 +104,12 @@ export default class QrCodeScanner extends LightningElement {
 					return response.json();
 				})
 				.then(json => {
+					debugger;
 					console.log(JSON.stringify(json));
 				})
 				.catch(e => {
 					throw new Error(e);
 				});
-
-			// // Fire platform event
-			// const fetchUrl = `${jData.serverUrl}/services/data/v47.0/sobjects/QRScan__e`;
-			// const fetchOptions = {
-			// 	method: 'post',
-			// 	headers: {
-			// 		'Content-Type': 'application/json',
-			// 		Authorization: `Bearer ${jData.sessionId}`
-			// 	},
-			// 	body: JSON.stringify({
-			// 		DTTM__c: jData.dttm,
-			// 		RecordId__c: jData.copy1
-			// 	})
-			// };
-			// fetch(fetchUrl, fetchOptions)
-			// 	.then(response => {
-			// 		return response.json();
-			// 	})
-			// 	.then(json => {
-			// 		console.log(JSON.stringify(json));
-			// 	})
-			// 	.catch(e => {
-			// 		throw new Error(e);
-			// 	});
 		}
 	}
 
