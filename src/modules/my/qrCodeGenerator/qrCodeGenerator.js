@@ -16,7 +16,8 @@ export default class QrCodeGenerator extends LightningElement {
 
 	generateQR() {
 		const canvas = this.template.querySelector('[data-id="QRCode"]');
-		const sData = JSON.stringify(new Date().toJSON());
+		// const sData = JSON.stringify(new Date().toJSON());
+		const sData = JSON.stringify(new Date().getMilliseconds());
 
 		QRCode.toCanvas(canvas, sData, { margin: 0, width: Math.min(window.innerWidth, window.innerHeight) * 0.9 })
 			// QRCode.toCanvas(canvas, sData)
