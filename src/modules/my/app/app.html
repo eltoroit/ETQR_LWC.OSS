@@ -4,16 +4,22 @@
 			<li class="slds-tabs_default__item" data-id="tabScanner" onclick={showScanner}>
 				Scanner
 			</li>
+			<li class="slds-tabs_default__item" data-id="tabData" onclick={showData} hidden>
+				Data
+			</li>
 			<li class="slds-tabs_default__item" data-id="tabGenerator" onclick={showGenerator}>
 				Generator
 			</li>
 		</ul>
-		<div id="tab-default-1" class="slds-tabs_default__content slds-hide" data-id="pageScanner">
-			<my-qr-code-scanner is-visible={isScannerVisible}></my-qr-code-scanner>
+		<div class="slds-tabs_default__content" data-id="pageScanner" hidden>
+			<my-qr-code-scanner is-visible={isScannerVisible} onscanned={handleDataScanned}></my-qr-code-scanner>
 		</div>
-		<div id="tab-default-2" class="slds-tabs_default__content slds-hide" data-id="pageGenerator">
+		<div class="slds-tabs_default__content" data-id="pageData" hidden>
+			Shows Data
+		</div>
+		<div class="slds-tabs_default__content" data-id="pageGenerator" hidden>
 			<my-qr-code-generator is-visible={isGeneratorVisible}></my-qr-code-generator>
 		</div>
 	</div>
-	v2.1
+	v2.2
 </template>
