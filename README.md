@@ -1,4 +1,4 @@
-# LWC.OSS
+# ETQR: LWC.OSS
 
 Project: Lightning Web Components (LWC.OSS)
 Repo: https://github.com/eltoroit/ETQR_LWC.OSS.git
