@@ -2,11 +2,14 @@ import { LightningElement, track } from 'lwc';
 
 export default class App extends LightningElement {
 	_initialized = false;
+
+	@track qrData = null;
 	@track pageVisibility = {};
 
 	constructor() {
 		super();
 		this.pageVisibility = {
+			data: false,
 			scanner: false,
 			generator: false
 		};
@@ -19,6 +22,7 @@ export default class App extends LightningElement {
 			// http://localhost:3001/?tab=generator
 			let urlParams = new URLSearchParams(window.location.search);
 			switch (urlParams.get('tab')) {
+				// case 'data':
 				case 'scanner':
 				case 'generator':
 					this._switchPage(urlParams.get('tab'));
@@ -30,15 +34,18 @@ export default class App extends LightningElement {
 		}
 	}
 
-	get isScannerVisible() {
-		return this.pageVisibility.scanner;
-	}
-	get isGeneratorVisible() {
-		return this.pageVisibility.generator;
+	handleDataScanned(event) {
+		const sData = event.detail;
+		this.qrData = sData;
+		this._switchPage('data');
 	}
 
 	showScanner() {
 		this._switchPage('scanner');
+	}
+
+	showData() {
+		this._switchPage('data');
 	}
 
 	showGenerator() {
@@ -49,10 +56,12 @@ export default class App extends LightningElement {
 		return {
 			tabs: {
 				scanner: this.template.querySelector('[data-id="tabScanner"]'),
+				data: this.template.querySelector('[data-id="tabData"]'),
 				generator: this.template.querySelector('[data-id="tabGenerator"]')
 			},
 			pages: {
 				scanner: this.template.querySelector('[data-id="pageScanner"]'),
+				data: this.template.querySelector('[data-id="pageData"]'),
 				generator: this.template.querySelector('[data-id="pageGenerator"]')
 			}
 		};
@@ -68,20 +77,17 @@ export default class App extends LightningElement {
 
 		Object.keys(dom.tabs).forEach(key => {
 			if (key === newTab) {
+				dom.tabs[key].hidden = false;
 				dom.tabs[key].classList.add('slds-is-active');
 			} else {
 				dom.tabs[key].classList.remove('slds-is-active');
 			}
+			dom.pages[key].hidden = key !== newTab;
 		});
 
-		Object.keys(dom.pages).forEach(key => {
-			if (key === newTab) {
-				dom.pages[key].classList.add('slds-show');
-				dom.pages[key].classList.remove('slds-hide');
-			} else {
-				dom.pages[key].classList.remove('slds-show');
-				dom.pages[key].classList.add('slds-hide');
-			}
-		});
+		if (newTab === 'scanner') {
+			dom.tabs.data.hidden = true;
+			dom.pages.data.hidden = true;
+		}
 	}
 }

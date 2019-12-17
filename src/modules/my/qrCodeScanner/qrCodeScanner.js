@@ -7,7 +7,6 @@ import jsQR from 'jsqr'; // npm install jsqr --save
 
 export default class QrCodeScanner extends LightningElement {
 	_ui = null;
-	_data = null;
 	_isVisible = false;
 
 	@api
@@ -16,20 +15,12 @@ export default class QrCodeScanner extends LightningElement {
 	}
 
 	set isVisible(value) {
-		this._data = null;
 		this._isVisible = value;
-
 		if (this._isVisible) {
 			this._startVideo();
-			this._showCaptureData('divCapture');
 		} else {
 			this._stopVideo();
-			this._showCaptureData('divData');
 		}
-	}
-
-	scanAgain() {
-		this.isVisible = true;
 	}
 
 	renderedCallback() {
@@ -39,13 +30,6 @@ export default class QrCodeScanner extends LightningElement {
 			this._ui.canvasElement = this.template.querySelector('[data-id=canvas]');
 			this._ui.canvas = this._ui.canvasElement.getContext('2d');
 			this._ui.loadingMessage = this.template.querySelector('[data-id=loadingMessage]');
-			this._ui.outputContainer = this.template.querySelector('[data-id=output]');
-			this._ui.outputMessage = this.template.querySelector('[data-id=outputMessage]');
-			this._ui.outputData = this.template.querySelector('[data-id=outputData]');
-			this._ui.divs = {
-				divCapture: this.template.querySelector('[data-id="divCapture"]'),
-				divData: this.template.querySelector('[data-id="divData"]')
-			};
 			this._ui.loadingMessage.innerText = '⌛ Loading video...';
 		}
 	}
@@ -56,8 +40,6 @@ export default class QrCodeScanner extends LightningElement {
 				try {
 					this._ui.loadingMessage.hidden = true;
 					this._ui.canvasElement.hidden = false;
-					this._ui.outputContainer.hidden = false;
-
 					this._ui.canvasElement.height = this._ui.video.videoHeight;
 					this._ui.canvasElement.width = this._ui.video.videoWidth;
 					this._ui.canvas.drawImage(this._ui.video, 0, 0, this._ui.canvasElement.width, this._ui.canvasElement.height);
@@ -65,50 +47,25 @@ export default class QrCodeScanner extends LightningElement {
 					let code = jsQR(imageData.data, imageData.width, imageData.height, {
 						inversionAttempts: 'dontInvert'
 					});
-					if (code) this._reportData(code);
+					if (code) {
+						try {
+							this._drawBox(code);
+							this.dispatchEvent(new CustomEvent('scanned', { detail: code.data }));
+						} catch (e) {
+							console.log(code.data);
+							console.error(e);
+						}
+					}
 				} catch (e) {
 					console.log(e);
 				}
 			} else {
 				this._ui.loadingMessage.hidden = !true;
 				this._ui.canvasElement.hidden = !false;
-				this._ui.outputContainer.hidden = !false;
 			}
 			window.requestAnimationFrame(() => {
 				this._tick();
 			});
-		}
-	}
-
-	_reportData(code) {
-		try {
-			const sData = code.data;
-			const jData = JSON.parse(sData);
-
-			this._drawBox(code);
-			this.isVisible = false;
-			this._ui.outputMessage.hidden = true;
-			this._ui.outputData.parentElement.hidden = false;
-			this._ui.outputData.innerHtml = JSON.stringify(jData, null, 2);
-
-			const fetchUrl = `/reportQRCode`;
-			const fetchOptions = {
-				method: 'post',
-				headers: { 'Content-Type': 'application/json' },
-				body: sData
-			};
-			fetch(fetchUrl, fetchOptions)
-				.then(response => {
-					return response.json();
-				})
-				.then(json => {
-					console.log(JSON.stringify(json));
-				})
-				.catch(e => {
-					console.error(e);
-				});
-		} catch (e) {
-			console.error(e);
 		}
 	}
 
@@ -154,18 +111,6 @@ export default class QrCodeScanner extends LightningElement {
 				});
 		} else {
 			alert('Your browser does not support camera, sorry. (2)');
-		}
-	}
-
-	_showCaptureData(showDiv) {
-		if (this._ui && this._ui.divs) {
-			try {
-				Object.keys(this._ui.divs).forEach(key => {
-					this._ui.divs[key].hidden = key !== showDiv;
-				});
-			} catch (e) {
-				console.log(e);
-			}
 		}
 	}
 }

@@ -15,19 +15,3 @@
 .canvas {
 	width: 100%;
 }
-
-.output {
-	margin-top: 20px;
-	background: #eee;
-	padding: 10px;
-	padding-bottom: 0;
-}
-
-.outputDiv {
-	padding-bottom: 10px;
-	word-wrap: break-word;
-}
-
-.noQRFound {
-	text-align: center;
-}
