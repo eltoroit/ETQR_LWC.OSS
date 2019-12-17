@@ -1,6 +1,6 @@
 # LWC.OSS
 
-Here will be some information about the app.
+Here will be some information about the app
 
 ## How to start?
 
